@@ -762,32 +762,34 @@ const StatusActionBar: React.FC<IStatusActionBar> = ({
           reblogButton
         )}
 
-        {features.emojiReacts ? (
+        {(!features.emojiReacts || !meEmojiReact) && (
+          <StatusActionButton
+            title={intl.formatMessage(messages.favourite)}
+            icon={require('@tabler/icons/outline/heart.svg')}
+            color='accent'
+            filled
+            onClick={handleFavouriteClick}
+            active={Boolean(meEmojiReact)}
+            count={favouriteCount}
+            text={withLabels ? meEmojiTitle : undefined}
+            theme={statusActionButtonTheme}
+          />
+        )}
+
+        {features.emojiReacts && (
           <StatusReactionWrapper statusId={status.id}>
             <StatusActionButton
               title={meEmojiTitle}
-              icon={require('@tabler/icons/outline/heart.svg')}
+              icon={require('@tabler/icons/outline/mood-wink-2.svg')}
               filled
               color='accent'
-              active={Boolean(meEmojiName)}
+              active={Boolean(meEmojiReact)}
               count={emojiReactCount}
               emoji={meEmojiReact}
               text={withLabels ? meEmojiTitle : undefined}
               theme={statusActionButtonTheme}
             />
           </StatusReactionWrapper>
-        ) : (
-          <StatusActionButton
-            title={intl.formatMessage(messages.favourite)}
-            icon={features.dislikes ? require('@tabler/icons/outline/thumb-up.svg') : require('@tabler/icons/outline/heart.svg')}
-            color='accent'
-            filled
-            onClick={handleFavouriteClick}
-            active={Boolean(meEmojiName)}
-            count={favouriteCount}
-            text={withLabels ? meEmojiTitle : undefined}
-            theme={statusActionButtonTheme}
-          />
         )}
 
         {features.dislikes && (

@@ -9,6 +9,7 @@ import { openModal } from 'soapbox/actions/modals';
 import { toggleStatusHidden, unfilterStatus } from 'soapbox/actions/statuses';
 import TranslateButton from 'soapbox/components/translate-button';
 import AccountContainer from 'soapbox/containers/account-container';
+import StatusInteractionBar from 'soapbox/features/status/components/status-interaction-bar';
 import QuotedStatus from 'soapbox/features/status/containers/quoted-status-container';
 import { HotKeys } from 'soapbox/features/ui/components/hotkeys';
 import { useAppDispatch, useSettings } from 'soapbox/hooks';
@@ -476,6 +477,8 @@ const Status: React.FC<IStatus> = (props) => {
                   )}
                 </Stack>
               )}
+
+              <StatusInteractionBar status={actualStatus} only={['emoji']} />
             </Stack>
 
             {(!hideActionBar && !isUnderReview) && (

@@ -12,9 +12,10 @@ import type { Status } from 'soapbox/types/entities';
 
 interface IStatusInteractionBar {
   status: Status;
+  only?: ('emoji' | 'repost' | 'quote')[];
 }
 
-const StatusInteractionBar: React.FC<IStatusInteractionBar> = ({ status }): JSX.Element | null => {
+const StatusInteractionBar: React.FC<IStatusInteractionBar> = ({ status, only }): JSX.Element | null => {
   const me = useAppSelector(({ me }) => me);
   const { allowedEmoji } = useSoapboxConfig();
   const dispatch = useAppDispatch();
@@ -177,12 +178,12 @@ const StatusInteractionBar: React.FC<IStatusInteractionBar> = ({ status }): JSX.
     if (count) {
       return (
         <InteractionCounter count={count} onClick={features.exposableReactions ? handleClick : undefined}>
-          <HStack space={0.5} alignItems='center'>
-            {emojiReacts.take(3).map((e, i) => {
+          <HStack space={0.5} alignItems='center' wrap>
+            {emojiReacts.map((e, i) => {
               return (
                 <Emoji
                   key={i}
-                  className='h-4.5 w-4.5 flex-none'
+                  className='h-7 flex-none'
                   emoji={e.name}
                   src={e.url}
                 />
@@ -222,11 +223,11 @@ const StatusInteractionBar: React.FC<IStatusInteractionBar> = ({ status }): JSX.
 
   return (
     <HStack space={3}>
-      {getReposts()}
-      {getQuotes()}
-      {(features.emojiReacts || features.emojiReactsMastodon) ? getEmojiReacts() : getFavourites()}
+      {(!only || only.includes('repost')) && getReposts()}
+      {(!only || only.includes('quote')) && getQuotes()}
+      {(!only || only.includes('emoji')) && ((features.emojiReacts || features.emojiReactsMastodon) ? getEmojiReacts() : getFavourites())}
       {getZaps()}
-      {getDislikes()}
+      {(!only || only.includes('emoji')) && getDislikes()}
     </HStack>
   );
 };

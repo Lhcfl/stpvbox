@@ -4,7 +4,7 @@ import { simpleEmojiReact } from 'soapbox/actions/emoji-reacts';
 import { openModal } from 'soapbox/actions/modals';
 import { EmojiSelector, Portal } from 'soapbox/components/ui';
 import { useAppDispatch, useAppSelector, useOwnAccount, useSoapboxConfig } from 'soapbox/hooks';
-import { userTouching } from 'soapbox/is-mobile';
+// import { userTouching } from 'soapbox/is-mobile';
 import { getReactForStatus } from 'soapbox/utils/emoji-reacts';
 
 interface IStatusReactionWrapper {
@@ -34,31 +34,31 @@ const StatusReactionWrapper: React.FC<IStatusReactionWrapper> = ({ statusId, chi
 
   if (!status) return null;
 
-  const handleMouseEnter = () => {
-    if (timeout.current) {
-      clearTimeout(timeout.current);
-    }
+  // const handleMouseEnter = () => {
+  //   if (timeout.current) {
+  //     clearTimeout(timeout.current);
+  //   }
 
-    if (!userTouching.matches) {
-      setVisible(true);
-    }
-  };
+  //   if (!userTouching.matches) {
+  //     setVisible(true);
+  //   }
+  // };
 
-  const handleMouseLeave = () => {
-    if (timeout.current) {
-      clearTimeout(timeout.current);
-    }
+  // const handleMouseLeave = () => {
+  //   if (timeout.current) {
+  //     clearTimeout(timeout.current);
+  //   }
 
-    // Unless the user is touching, delay closing the emoji selector briefly
-    // so the user can move the mouse diagonally to make a selection.
-    if (userTouching.matches) {
-      setVisible(false);
-    } else {
-      timeout.current = setTimeout(() => {
-        setVisible(false);
-      }, 500);
-    }
-  };
+  //   // Unless the user is touching, delay closing the emoji selector briefly
+  //   // so the user can move the mouse diagonally to make a selection.
+  //   if (userTouching.matches) {
+  //     setVisible(false);
+  //   } else {
+  //     timeout.current = setTimeout(() => {
+  //       setVisible(false);
+  //     }, 500);
+  //   }
+  // };
 
   const handleReact = (emoji: string, custom?: string): void => {
     if (ownAccount) {
@@ -71,20 +71,32 @@ const StatusReactionWrapper: React.FC<IStatusReactionWrapper> = ({ statusId, chi
   };
 
   const handleClick: React.EventHandler<React.MouseEvent> = e => {
-    const meEmojiReact = getReactForStatus(status, soapboxConfig.allowedEmoji)?.name || '👍';
+    const meEmojiReact = getReactForStatus(status, soapboxConfig.allowedEmoji)?.name || '♥';
 
-    if (userTouching.matches) {
-      if (ownAccount) {
-        if (visible) {
-          handleReact(meEmojiReact);
-        } else {
-          setVisible(true);
-        }
+    // if (userTouching.matches) {
+    //   if (ownAccount) {
+    //     if (visible) {
+    //       handleReact(meEmojiReact);
+    //     } else {
+    //       setVisible(true);
+    //     }
+    //   } else {
+    //     handleUnauthorized();
+    //   }
+    // } else {
+    //   handleReact(meEmojiReact);
+    // }
+
+    console.log(status);
+
+    if (ownAccount) {
+      if (status.reactions?.some((e) => e.me)) {
+        handleReact(meEmojiReact);
       } else {
-        handleUnauthorized();
+        setVisible(true);
       }
     } else {
-      handleReact(meEmojiReact);
+      handleUnauthorized();
     }
 
     e.preventDefault();
@@ -99,7 +111,7 @@ const StatusReactionWrapper: React.FC<IStatusReactionWrapper> = ({ statusId, chi
   };
 
   return (
-    <div className='relative' onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div className='relative'>
       {React.cloneElement(children, {
         onClick: handleClick,
         ref: setReferenceElement,

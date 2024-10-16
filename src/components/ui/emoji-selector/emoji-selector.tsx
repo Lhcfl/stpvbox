@@ -49,6 +49,7 @@ interface IEmojiSelector {
   offsetOptions?: OffsetOptions;
   /** Whether to allow any emoji to be chosen. */
   all?: boolean;
+  defaultly_expanded?: boolean;
 }
 
 /** Panel with a row of emoji buttons. */
@@ -64,7 +65,7 @@ const EmojiSelector: React.FC<IEmojiSelector> = ({
   const soapboxConfig = useSoapboxConfig();
   const { customEmojiReacts } = useFeatures();
 
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   const { x, y, strategy, refs, update } = useFloating<HTMLElement>({
     placement,
@@ -110,7 +111,14 @@ const EmojiSelector: React.FC<IEmojiSelector> = ({
         width: 'max-content',
       }}
     >
-      {expanded ? (
+      <EmojiPickerDropdown
+        visible
+        setVisible={setExpanded}
+        update={update}
+        withCustom={customEmojiReacts}
+        onPickEmoji={handlePickEmoji}
+      />
+      {/* {expanded ? (
         <EmojiPickerDropdown
           visible={expanded}
           setVisible={setExpanded}
@@ -139,7 +147,7 @@ const EmojiSelector: React.FC<IEmojiSelector> = ({
             />
           )}
         </HStack>
-      )}
+      )} */}
     </div>
   );
 };
